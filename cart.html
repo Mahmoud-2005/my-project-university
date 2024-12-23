@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - Cafe Bliss</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="icon1.jpg" type="image/x-icon">
+</head>
+<body>
+  <header class="bg-light text-dark py-3">
+    <nav class="container navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand" href="index.html">مقهى ومطعم متميز</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="menu.html">المنيو</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="cart.html">
+              <i class="fas fa-shopping-cart"></i> عربة التسوق
+            </a>
+          </li>
+          <!-- روابط أخرى -->
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <h1 class="text-center mb-4">قائمة الطعام</h1>
+    <div id="menu"></div> <!-- هنا سيتم عرض قائمة الطعام -->
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2024 مقهى ومطعم متميز. جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // تحديد الرابط النشط في الشريط العلوي
+    const navLinks = document.querySelectorAll('nav a');
+    const currentUrl = window.location.href;
+
+    navLinks.forEach(link => {
+      if (link.href === currentUrl) {
+        link.classList.add('active'); // إضافة الفئة النشطة
+      } else {
+        link.classList.remove('active'); // إزالة الفئة من الروابط الأخرى
+      }
+    });
+
+    // عرض قائمة الطعام ديناميكيًا
+    const menuItems = [
+      // المشروبات الساخنة
+      { category: "المشروبات الساخنة", name: "لاتيه", price: "20 جنيه", description: "قهوة بالحليب الرغوي" },
+      { category: "المشروبات الساخنة", name: "كابتشينو", price: "25 جنيه", description: "مشروب غني بالكريمة" },
+      // ... (أضف بقية العناصر هنا)
+    ];
+
+    // تصنيف قائمة الطعام
+    const menuContainer = document.getElementById('menu');
+    const categories = [...new Set(menuItems.map(item => item.category))];
+
+    // إنشاء القوائم لكل تصنيف
+    categories.forEach(category => {
+      const categoryHeader = document.createElement('h2');
+      categoryHeader.textContent = category;
+      menuContainer.appendChild(categoryHeader);
+
+      const categoryList = document.createElement('ul');
+
+      menuItems.filter(item => item.category === category).forEach(item => {
+        const menuItem = document.createElement('li');
+        menuItem.innerHTML = `
+          <strong>${item.name}</strong> - ${item.price}
+          <button class="details-btn btn btn-info btn-sm">اعرف المزيد</button>
+          <button class="order-btn btn btn-success btn-sm" onclick="addToCart('${item.name}', '${item.price}')">اطلب الآن</button>
+        `;
+        categoryList.appendChild(menuItem);
+
+        // إضافة حدث لزر "اعرف المزيد"
+        menuItem.querySelector('.details-btn').addEventListener('click', () => {
+          alert(`الوصف: ${item.description}`);
+        });
+      });
+
+      menuContainer.appendChild(categoryList);
+    });
+
+    // د الة لإضافة العناصر إلى عربة التسوق
+    function addToCart(name, price) {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      cartItems.push({ name, price });
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      alert(`${name} تم إضافته إلى عربة التسوق!`);
+    }
+  </script>
+  <script src="script.js"></script.js>
+</body>
+</html>
